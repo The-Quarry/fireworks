@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Guernsey Firework Displays</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Leaflet 1.9.4 with correct SRI -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin="anonymous"
+  />
+  <style>
+    html, body, #map { height: 100%; margin: 0; }
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+
+    /* --- Filter control --- */
+    .filter-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .filter-toggle {
+      background: #fff;
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
+      border: 1px solid rgba(0,0,0,.06);
+      padding: 6px 10px;
+      font-size: 14px;
+      cursor: pointer;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    .filter-toggle:focus { outline: 2px solid #1976d2; outline-offset: 2px; }
+
+    .filter-control {
+      background: #fff;
+      padding: 10px 12px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
+      font-size: 14px;
+      line-height: 1.25;
+      min-width: 240px;
+      max-width: 280px;
+      transition: transform .18s ease, opacity .18s ease;
+    }
+    .filter-control h3 {
+      margin: 0 0 6px 0;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .filter-row { margin: 6px 0; }
+    .filter-row label { display: block; margin-bottom: 4px; font-weight: 600; }
+    .filter-row select, .filter-row input[type="checkbox"] { font-size: 14px; }
+
+    /* Collapsed state */
+    .filter-collapsed .filter-control { transform: scale(0.98); opacity: 0; pointer-events: none; height: 0; padding: 0; margin: 0; }
+    .filter-collapsed .filter-control * { display: none; } /* keep control in DOM but hidden for accessibility */
+
+    /* Auto-collapse on small screens */
+    @media (max-width: 640px) {
+      .filter-control { max-width: 88vw; }
+      .leaflet-top.leaflet-left { margin-top: 12px; }
+    }
+
+    /* --- Legend control --- */
+    .legend {
+      background: #fff;
+      padding: 8px 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
+      font-size: 13px;
+    }
+    .legend .row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+    .swatch {
+      width: 14px; height: 14px; border-radius: 50%;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
+    }
+    .swatch.public  { background: #2e7d32; }
+    .swatch.private { background: #1976d2; }
+    .swatch.unknown { background: #757575; }
+
+    /* --- Popup style overrides for Public --- */
+    .popup-content .line { margin: 2px 0; }
+    .popup-content .address { font-weight: 700; }
+    .leaflet-popup-content { margin: 10px 12px; }
+
+    .popup-public .leaflet-popup-content-wrapper {
+      background: #e6f4ea;
+      color: #0b3d18;
+    }
+    .popup-public .leaflet-popup-tip { background: #e6f4ea; }
+    .popup-public a { color: #0b3d18; text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin="anonymous">
+  </script>
+  <script>
+    // ---- Helpers ----
+    const GSY_CENTER = [49.45, -2.54];
+
+    function escapeHtml(s) {
+      if (s === undefined || s === null) return "";
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Format "YYYY-MM-DD" -> "Wednesday 5 November"
+    function formatNiceDate(iso, tz = "Europe/Guernsey") {
+      if (!iso) return "";
+      const d = new Date(iso + "T12:00:00");
+      const fmt = new Intl.DateTimeFormat("en-GB", { timeZone: tz, weekday: "long", day: "numeric", month: "long" });
+      return fmt.format(d);
+    }
+
+    function normaliseType(t) {
+      if (!t) return "";
+      const x = String(t).trim().toLowerCase();
+      if (x.startsWith("pub")) return "Public";
+      if (x.startsWith("pri")) return "Private";
+      return t;
+    }
+
+    // --- Colored pin icons (inline SVG, no CDN) ---
+    function markerIcon(color) {
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" aria-hidden="true" focusable="false">
+          <path fill="${color}" stroke="#000" stroke-opacity="0.15"
+                d="M12 2c-5.5 0-10 4.5-10 10 0 7.5 10 20 10 20s10-12.5 10-20c0-5.5-4.5-10-10-10z"/>
+          <circle cx="12" cy="12" r="4" fill="white"/>
+        </svg>`;
+      const url = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+      return L.icon({
+        iconUrl: url,
+        iconSize: [24, 36],
+        iconAnchor: [12, 34],
+        popupAnchor: [0, -28]
+      });
+    }
+    const ICONS = {
+      Public:  markerIcon("#2e7d32"),
+      Private: markerIcon("#1976d2"),
+      Unknown: markerIcon("#757575")
+    };
+
+    // ---- Map setup ----
+    const map = L.map('map').setView(GSY_CENTER, 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const markersLayer = L.layerGroup().addTo(map);
+    let allEvents = [];
+
+    // ---- Collapsible Filter control ----
+    const FilterControl = L.Control.extend({
+      onAdd: function() {
+        const wrapper = L.DomUtil.create('div', 'filter-wrapper filter-collapsed'); // start collapsed
+        // Toggle button
+        const btn = L.DomUtil.create('button', 'filter-toggle', wrapper);
+        btn.setAttribute('type', 'button');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-controls', 'filter-panel');
+        btn.innerHTML = 'Filters &#9662;'; // ▼
+        // Panel
+        const panel = L.DomUtil.create('div', 'filter-control', wrapper);
+        panel.id = 'filter-panel';
+        panel.innerHTML = `
+          <h3>Filter</h3>
+          <div class="filter-row">
+            <label for="dateSelect">Date</label>
+            <select id="dateSelect">
+              <option value="__all__">All dates</option>
+            </select>
+          </div>
+          <div class="filter-row">
+            <label>Type</label>
+            <div>
+              <label style="font-weight:400"><input type="checkbox" id="chkPublic" checked> Public</label>
+            </div>
+            <div>
+              <label style="font-weight:400"><input type="checkbox" id="chkPrivate" checked> Private</label>
+            </div>
+          </div>
+        `;
+
+        // Toggle behavior
+        function toggle() {
+          const collapsed = wrapper.classList.toggle('filter-collapsed');
+          btn.setAttribute('aria-expanded', String(!collapsed));
+          btn.innerHTML = collapsed ? 'Filters &#9656;' : 'Filters &#9662;'; // ▶ / ▼
+        }
+        btn.addEventListener('click', toggle);
+
+        // Prevent map interactions when using UI
+        L.DomEvent.disableClickPropagation(wrapper);
+        L.DomEvent.disableScrollPropagation(wrapper);
+        return wrapper;
+      },
+      onRemove: function() {}
+    });
+    const filterCtl = new FilterControl({ position: 'topleft' }).addTo(map);
+
+    // ---- Legend control ----
+    const LegendControl = L.Control.extend({
+      onAdd: function() {
+        const div = L.DomUtil.create('div', 'legend');
+        div.innerHTML = `
+          <div class="row"><span class="swatch public"></span> Public</div>
+          <div class="row"><span class="swatch private"></span> Private</div>
+          <div class="row"><span class="swatch unknown"></span> Unknown</div>
+        `;
+        L.DomEvent.disableClickPropagation(div);
+        L.DomEvent.disableScrollPropagation(div);
+        return div;
+      },
+      onRemove: function() {}
+    });
+    new LegendControl({ position: 'bottomleft' }).addTo(map);
+
+    function getFilterValues() {
+      const sel = document.getElementById('dateSelect');
+      const valDate = sel ? sel.value : "__all__";
+      const showPublic = document.getElementById('chkPublic')?.checked ?? true;
+      const showPrivate = document.getElementById('chkPrivate')?.checked ?? true;
+      return { valDate, showPublic, showPrivate };
+    }
+
+    function populateDateFilter(events) {
+      const sel = document.getElementById('dateSelect');
+      if (!sel) return;
+      const isoDates = Array.from(new Set(events.map(e => e.date).filter(Boolean))).sort();
+      while (sel.options.length > 1) sel.remove(1);
+      isoDates.forEach(iso => {
+        const opt = document.createElement('option');
+        opt.value = iso;
+        opt.textContent = formatNiceDate(iso);
+        sel.appendChild(opt);
+      });
+      sel.addEventListener('change', renderMarkers);
+      document.getElementById('chkPublic').addEventListener('change', renderMarkers);
+      document.getElementById('chkPrivate').addEventListener('change', renderMarkers);
+    }
+
+    function makePopupHtml(e) {
+      const address = e.full_address || e.address || e.venue || e.title || "Address unavailable";
+      const dateStr = e.date ? formatNiceDate(e.date) : "";
+      const timeStr = e.time ? String(e.time) : "";
+      const typeStr = normaliseType(e.type || "");
+      const pc = e.postcode || "";
+      const notes = e.notes ? String(e.notes).trim() : "";
+
+      return `
+        <div class="popup-content">
+          <div class="line address">${escapeHtml(address)}</div>
+          ${dateStr ? `<div class="line">${escapeHtml(dateStr)}</div>` : ``}
+          ${timeStr ? `<div class="line">${escapeHtml(timeStr)}</div>` : ``}
+          ${typeStr ? `<div class="line">${escapeHtml(typeStr)}</div>` : ``}
+          ${pc ? `<div class="line">${escapeHtml(pc)}</div>` : ``}
+          ${notes ? `<div class="line">${escapeHtml(notes)}</div>` : ``}
+        </div>
+      `;
+    }
+
+    function renderMarkers() {
+      markersLayer.clearLayers();
+      const { valDate, showPublic, showPrivate } = getFilterValues();
+      const filtered = allEvents.filter(e => {
+        const t = normaliseType(e.type);
+        const typeOK = (t === "Public" && showPublic) ||
+                       (t === "Private" && showPrivate) ||
+                       (!t && (showPublic || showPrivate));
+        const dateOK = (valDate === "__all__") || (e.date === valDate);
+        return typeOK && dateOK && typeof e.lat === "number" && typeof e.lon === "number";
+      });
+
+      const latlngs = [];
+      filtered.forEach(e => {
+        const t = normaliseType(e.type);
+        const typeKey = t === "Public" ? "Public" : (t === "Private" ? "Private" : "Unknown");
+        const className = (t === "Public") ? "popup-public" : "";
+        const marker = L.marker([e.lat, e.lon], { icon: ICONS[typeKey] }).addTo(markersLayer);
+        marker.bindPopup(makePopupHtml(e), { className });
+        latlngs.push([e.lat, e.lon]);
+      });
+
+      if (latlngs.length) {
+        map.fitBounds(latlngs, { padding: [40, 40] });
+      } else {
+        map.setView(GSY_CENTER, 12);
+      }
+    }
+
+    // ---- Load data and go ----
+    fetch('events.json')
+      .then(r => r.json())
+      .then(events => {
+        allEvents = (Array.isArray(events) ? events : []).map(e => {
+          const obj = { ...e };
+          if (obj.lat !== null && obj.lat !== undefined) obj.lat = Number(obj.lat);
+          if (obj.lon !== null && obj.lon !== undefined) obj.lon = Number(obj.lon);
+          obj.type = normaliseType(obj.type);
+          return obj;
+        });
+        const missing = allEvents.filter(e => !(typeof e.lat === "number" && typeof e.lon === "number"));
+        if (missing.length) console.warn("Events missing lat/lon (not shown):", missing);
+
+        // Auto-collapse filter on small screens (already default), expand on larger screens
+        if (window.matchMedia('(min-width: 641px)').matches) {
+          const wrapper = document.querySelector('.filter-wrapper');
+          if (wrapper) wrapper.classList.remove('filter-collapsed');
+          const btn = document.querySelector('.filter-toggle');
+          if (btn) btn.setAttribute('aria-expanded', 'true');
+        }
+
+        populateDateFilter(allEvents);
+        renderMarkers();
+      })
+      .catch(err => {
+        console.error("Failed to load events.json", err);
+        alert("Failed to load events.json. Check console for details.");
+      });
+  </script>
+</body>
+</html>
