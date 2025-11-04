@@ -642,8 +642,8 @@
     "time": "19:00-19:15",
     "type": "Public",
     "postcode": "GY4 6RZ",
-    "lat": null,
-    "lon": null,
+    "lat": 49.436566,
+    "lon": -2.551118,
     "notes": "",
     "_geocode_query": null
   },
