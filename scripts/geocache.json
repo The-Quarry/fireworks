@@ -53,6 +53,24 @@
     "precision": "street",
     "query": "Photon: La Rochelle Road"
   },
+  "les genats estate castel gy5 7yj": {
+    "lat": 49.466633,
+    "lon": -2.587432,
+    "precision": "parish",
+    "query": "Castel, Guernsey"
+  },
+  "les ruettes st andrew gy6 8uq": {
+    "lat": 49.454174,
+    "lon": -2.564143,
+    "precision": "address",
+    "query": "Les Ruettes, St. Andrew, Guernsey"
+  },
+  "longue rue st sampson gy2 4ab": {
+    "lat": 49.481727,
+    "lon": -2.538839,
+    "precision": "parish",
+    "query": "St Sampson, Guernsey"
+  },
   "longue rue vale gy6 8db": {
     "lat": 49.4759,
     "lon": -2.560292,
@@ -376,6 +394,12 @@
     "lon": -2.597669,
     "precision": "postcode",
     "query": "2025 map: Les Villets Forest"
+  },
+  "portinfer road vale gy6 8hj": {
+    "lat": 49.491309,
+    "lon": -2.572406,
+    "precision": "address",
+    "query": "Portinfer Road, Vale, Guernsey"
   },
   "rocquettes road st peter port gy1 1xr": {
     "lat": 49.458574,

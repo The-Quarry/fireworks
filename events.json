@@ -1,8 +1,8 @@
 {
   "source": "https://www.gov.gg/fireworks",
   "year": 2026,
-  "checked": "2026-11-02T15:15:35+00:00",
-  "changed": "2026-11-02T15:04:56+00:00",
+  "checked": "2026-11-02T23:08:53+00:00",
+  "changed": "2026-11-02T23:08:53+00:00",
   "events": [
     {
       "name": "Duveaux Road",
@@ -59,6 +59,25 @@
       "geo_precision": "postcode",
       "id": "2026-11-05|la villette hotel rue de la villette st martins gy4 6qg",
       "first_seen": "2026-11-02T15:04:56+00:00",
+      "status": "listed"
+    },
+    {
+      "name": "Les Ruettes",
+      "full_address": "Les Ruettes, St. Andrew, GY6 8UQ",
+      "parish": "St Andrew",
+      "postcode": "GY6 8UQ",
+      "date": "2026-11-05",
+      "time": "18:00-20:00",
+      "start": "18:00",
+      "end": "20:00",
+      "fireworks_at": "",
+      "type": "Private",
+      "notes": "",
+      "lat": 49.454174,
+      "lon": -2.564143,
+      "geo_precision": "address",
+      "id": "2026-11-05|les ruettes st andrew gy6 8uq",
+      "first_seen": "2026-11-02T23:08:53+00:00",
       "status": "listed"
     },
     {
@@ -195,6 +214,25 @@
       "status": "listed"
     },
     {
+      "name": "Portinfer Road",
+      "full_address": "Portinfer Road, Vale, GY6 8HJ",
+      "parish": "Vale",
+      "postcode": "GY6 8HJ",
+      "date": "2026-11-05",
+      "time": "19:15-19:45",
+      "start": "19:15",
+      "end": "19:45",
+      "fireworks_at": "",
+      "type": "Private",
+      "notes": "",
+      "lat": 49.491309,
+      "lon": -2.572406,
+      "geo_precision": "address",
+      "id": "2026-11-05|portinfer road vale gy6 8hj",
+      "first_seen": "2026-11-02T23:08:53+00:00",
+      "status": "listed"
+    },
+    {
       "name": "Longue Rue",
       "full_address": "Longue Rue, Vale, GY6 8DB",
       "parish": "Vale",
@@ -309,6 +347,25 @@
       "status": "listed"
     },
     {
+      "name": "Les Genats Estate",
+      "full_address": "Les Genats Estate, Castel, GY5 7YJ",
+      "parish": "Castel",
+      "postcode": "GY5 7YJ",
+      "date": "2026-11-06",
+      "time": "18:30-19:00",
+      "start": "18:30",
+      "end": "19:00",
+      "fireworks_at": "",
+      "type": "Private",
+      "notes": "",
+      "lat": 49.466633,
+      "lon": -2.587432,
+      "geo_precision": "parish",
+      "id": "2026-11-06|les genats estate castel gy5 7yj",
+      "first_seen": "2026-11-02T23:08:53+00:00",
+      "status": "listed"
+    },
+    {
       "name": "Rue De La Hougue Maban",
       "full_address": "Rue De La Hougue Maban, St Saviour, GY7 9JL",
       "parish": "St Saviour",
@@ -363,6 +420,25 @@
       "geo_precision": "address",
       "id": "2026-11-06|la houguette primary school route des paysans st pierre du bois gy7 9la",
       "first_seen": "2026-11-02T15:04:56+00:00",
+      "status": "listed"
+    },
+    {
+      "name": "Longue Rue",
+      "full_address": "Longue Rue, St. Sampson, GY2 4AB",
+      "parish": "St Sampson",
+      "postcode": "GY2 4AB",
+      "date": "2026-11-07",
+      "time": "18:00-18:45",
+      "start": "18:00",
+      "end": "18:45",
+      "fireworks_at": "",
+      "type": "Private",
+      "notes": "",
+      "lat": 49.481727,
+      "lon": -2.538839,
+      "geo_precision": "parish",
+      "id": "2026-11-07|longue rue st sampson gy2 4ab",
+      "first_seen": "2026-11-02T23:08:53+00:00",
       "status": "listed"
     },
     {
