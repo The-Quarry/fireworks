@@ -58,8 +58,8 @@
     aside { border-left: 1px solid var(--line); overflow-y: auto; min-height: 0; }
     @media (max-width: 760px) {
       header { padding: 8px 10px 6px; }
-      #dateChips { flex: 1 0 100%; min-width: 0; max-width: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
-      #dateChips::-webkit-scrollbar { display: none; }
+      #dateChips { flex: 1 0 100%; min-width: 0; gap: 5px; }
+      .chip { padding: 4px 9px; font-size: 13px; }
       .controls .sep:first-of-type { display: none; }
       .near-btn { margin-left: auto; }
       main { grid-template-columns: minmax(0, 1fr); grid-template-rows: 55% 45%; }
