@@ -1,340 +1,527 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="utf-8" />
   <title>Guernsey Firework Displays</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Leaflet 1.9.4 with correct SRI -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin="anonymous"
-  />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+        integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="anonymous" />
   <style>
-    html, body, #map { height: 100%; margin: 0; }
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    :root {
+      --ink: #1a1a1a;
+      --muted: #5f6368;
+      --line: #e3e3e3;
+      --bg: #fff;
+      --soft: #f6f6f4;
+      --public: #2e7d32;
+      --private: #1976d2;
+      --past: #9e9e9e;
+      --accent: #c2410c;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink); background: var(--bg); font-size: 14px; line-height: 1.35;
+      display: grid; grid-template-rows: auto 1fr auto; grid-template-columns: minmax(0, 1fr); height: 100vh;
+    }
+    button { font: inherit; color: inherit; }
 
-    /* --- Filter control --- */
-    .filter-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+    /* Header */
+    header { padding: 10px 12px 8px; border-bottom: 1px solid var(--line); }
+    .title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    h1 { font-size: 16px; margin: 0; }
+    .summary { color: var(--muted); font-size: 13px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; align-items: center; }
+    .chip {
+      border: 1px solid var(--line); background: var(--bg); border-radius: 999px;
+      padding: 5px 10px; cursor: pointer; white-space: nowrap;
     }
-    .filter-toggle {
-      background: #fff;
-      border-radius: 999px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.15);
-      border: 1px solid rgba(0,0,0,.06);
-      padding: 6px 10px;
-      font-size: 14px;
-      cursor: pointer;
-      line-height: 1;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      user-select: none;
-    }
-    .filter-toggle:focus { outline: 2px solid #1976d2; outline-offset: 2px; }
+    .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+    .chip.past:not([aria-pressed="true"]) { color: var(--muted); }
+    .chip .n { opacity: .7; margin-left: 4px; font-size: 12px; }
+    #dateChips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .sep { width: 1px; height: 22px; background: var(--line); margin: 0 2px; }
+    .toggle { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; padding: 4px 4px; }
+    .dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+    .dot.public { background: var(--public); width: 13px; height: 13px; }
+    .dot.private { background: var(--private); }
+    .dot.past { background: var(--past); }
+    .near-btn { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-    .filter-control {
-      background: #fff;
-      padding: 10px 12px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.15);
-      font-size: 14px;
-      line-height: 1.25;
-      min-width: 240px;
-      max-width: 280px;
-      transition: transform .18s ease, opacity .18s ease;
-    }
-    .filter-control h3 {
-      margin: 0 0 6px 0;
-      font-size: 14px;
-      font-weight: 700;
-    }
-    .filter-row { margin: 6px 0; }
-    .filter-row label { display: block; margin-bottom: 4px; font-weight: 600; }
-    .filter-row select, .filter-row input[type="checkbox"] { font-size: 14px; }
-
-    /* Collapsed state */
-    .filter-collapsed .filter-control { transform: scale(0.98); opacity: 0; pointer-events: none; height: 0; padding: 0; margin: 0; }
-    .filter-collapsed .filter-control * { display: none; } /* keep control in DOM but hidden for accessibility */
-
-    /* Auto-collapse on small screens */
-    @media (max-width: 640px) {
-      .filter-control { max-width: 88vw; }
-      .leaflet-top.leaflet-left { margin-top: 12px; }
+    /* Main */
+    main { display: grid; grid-template-columns: minmax(0, 1fr) 330px; min-height: 0; }
+    #map { min-height: 0; }
+    aside { border-left: 1px solid var(--line); overflow-y: auto; min-height: 0; }
+    @media (max-width: 760px) {
+      header { padding: 8px 10px 6px; }
+      #dateChips { flex: 1 0 100%; min-width: 0; max-width: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+      #dateChips::-webkit-scrollbar { display: none; }
+      .controls .sep:first-of-type { display: none; }
+      .near-btn { margin-left: auto; }
+      main { grid-template-columns: minmax(0, 1fr); grid-template-rows: 55% 45%; }
+      aside { border-left: 0; border-top: 1px solid var(--line); }
     }
 
-    /* --- Legend control --- */
-    .legend {
-      background: #fff;
-      padding: 8px 10px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.15);
-      font-size: 13px;
-    }
-    .legend .row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
-    .swatch {
-      width: 14px; height: 14px; border-radius: 50%;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
-    }
-    .swatch.public  { background: #2e7d32; }
-    .swatch.private { background: #1976d2; }
-    .swatch.unknown { background: #757575; }
+    /* Near me panel */
+    #near { padding: 10px 12px; background: #fff7ed; border-bottom: 1px solid #fed7aa; }
+    #near[hidden] { display: none; }
+    #near h2 { font-size: 14px; margin: 0 0 4px; }
+    #near p { margin: 4px 0; }
+    #near ul { margin: 4px 0; padding-left: 18px; }
+    #near .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+    #near select, #near button { font-size: 13px; }
+    .linkish { background: none; border: 0; padding: 0; color: var(--accent); text-decoration: underline; cursor: pointer; }
+    .small { font-size: 12px; color: var(--muted); }
 
-    /* --- Popup style overrides for Public --- */
-    .popup-content .line { margin: 2px 0; }
-    .popup-content .address { font-weight: 700; }
-    .leaflet-popup-content { margin: 10px 12px; }
-
-    .popup-public .leaflet-popup-content-wrapper {
-      background: #e6f4ea;
-      color: #0b3d18;
+    /* List */
+    .day h3 {
+      position: sticky; top: 0; z-index: 1; margin: 0; padding: 7px 12px; font-size: 13px;
+      background: var(--soft); border-bottom: 1px solid var(--line);
     }
-    .popup-public .leaflet-popup-tip { background: #e6f4ea; }
-    .popup-public a { color: #0b3d18; text-decoration: underline; }
+    .day h3 .past-tag { font-weight: 400; color: var(--muted); }
+    .item {
+      display: grid; grid-template-columns: 14px 1fr auto; gap: 8px; width: 100%;
+      text-align: left; background: none; border: 0; border-bottom: 1px solid var(--line);
+      padding: 8px 12px; cursor: pointer;
+    }
+    .item:hover, .item:focus-visible { background: var(--soft); }
+    .item .dot { margin-top: 4px; }
+    .item .nm { font-weight: 600; }
+    .item.public .nm { color: var(--public); }
+    .item .sub { color: var(--muted); font-size: 12px; }
+    .item .tm { font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 13px; }
+    .item.gone .nm { text-decoration: line-through; color: var(--muted); }
+    .badge { display: inline-block; font-size: 11px; padding: 0 5px; border-radius: 4px; margin-left: 4px; vertical-align: 1px; }
+    .badge.pub { background: #e6f4ea; color: #0b3d18; }
+    .badge.warn { background: #fdecea; color: #8a1c12; }
+    .badge.moved { background: #fff4d6; color: #6b4e00; }
+    .empty { padding: 16px 12px; color: var(--muted); }
+
+    details.compare { padding: 10px 12px 14px; border-top: 1px solid var(--line); }
+    details.compare summary { cursor: pointer; font-weight: 600; }
+    .cmp-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13px; }
+    .cmp-table th, .cmp-table td { padding: 3px 4px; border-bottom: 1px solid var(--line); text-align: right; }
+    .cmp-table th:first-child, .cmp-table td:first-child { text-align: left; }
+    .bar { display: inline-block; height: 8px; background: var(--private); vertical-align: middle; border-radius: 2px; }
+    .bar.prev { background: #c7c7c7; }
+
+    footer { padding: 6px 12px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+    footer a { color: inherit; }
+
+    /* Popups */
+    .leaflet-popup-content { margin: 10px 12px; font-size: 13px; }
+    .pp .nm { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+    .pp .line { margin: 2px 0; }
+    .pp .note { margin-top: 6px; font-size: 12px; color: var(--muted); }
+    .popup-public .leaflet-popup-content-wrapper, .popup-public .leaflet-popup-tip { background: #e6f4ea; color: #0b3d18; }
+
+    /* Clusters (only near-identical locations cluster) */
+    .fw-cluster {
+      background: var(--ink); color: #fff; border-radius: 50%; border: 2px solid #fff;
+      display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.35);
+    }
+    .home-pin { background: var(--accent); border: 3px solid #fff; border-radius: 50%; box-shadow: 0 0 0 2px var(--accent); }
+    .map-msg {
+      position: absolute; z-index: 1000; left: 50%; top: 10px; transform: translateX(-50%);
+      background: var(--ink); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 13px;
+      max-width: 90%; text-align: center;
+    }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   </style>
 </head>
 <body>
-  <div id="map"></div>
+  <header>
+    <div class="title-row">
+      <h1 id="title">Firework displays in Guernsey</h1>
+      <span class="summary" id="summary"></span>
+    </div>
+    <div class="controls" id="controls">
+      <div id="dateChips" role="group" aria-label="Choose a night"></div>
+      <span class="sep" aria-hidden="true"></span>
+      <label class="toggle"><input type="checkbox" id="chkPublic" checked> <span class="dot public"></span> Public</label>
+      <label class="toggle"><input type="checkbox" id="chkPrivate" checked> <span class="dot private"></span> Private</label>
+      <span class="sep" aria-hidden="true"></span>
+      <button type="button" class="chip near-btn" id="nearBtn">Displays near me</button>
+    </div>
+  </header>
 
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin="anonymous">
-  </script>
+  <main>
+    <div id="map" role="region" aria-label="Map of firework displays"></div>
+    <aside>
+      <section id="near" hidden aria-live="polite"></section>
+      <section id="list" aria-label="List of displays"></section>
+      <details class="compare" id="compare" hidden>
+        <summary>Compared with last year</summary>
+        <div id="compareBody"></div>
+      </details>
+    </aside>
+  </main>
+
+  <footer id="footer">
+    Locations are approximate, placed by postcode or road, and not every display is registered.
+    Source: <a href="https://www.gov.gg/fireworks" target="_blank" rel="noopener">States of Guernsey</a>.
+    <span id="checked"></span>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
+          integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr" crossorigin="anonymous"></script>
   <script>
-    // ---- Helpers ----
-    const GSY_CENTER = [49.45, -2.54];
+  (function () {
+    const TZ = "Europe/Guernsey";
+    const GSY_CENTER = [49.455, -2.585];
+    const GSPCA_URL = "https://www.gspca.org.gg/";
+    const params = new URLSearchParams(location.search);
 
-    function escapeHtml(s) {
-      if (s === undefined || s === null) return "";
-      return String(s)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    // Format "YYYY-MM-DD" -> "Wednesday 5 November"
-    function formatNiceDate(iso, tz = "Europe/Guernsey") {
-      if (!iso) return "";
-      const d = new Date(iso + "T12:00:00");
-      const fmt = new Intl.DateTimeFormat("en-GB", { timeZone: tz, weekday: "long", day: "numeric", month: "long" });
-      return fmt.format(d);
-    }
-
+    // ---------- helpers ----------
+    const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[c]));
+    const todayIso = (() => {
+      const p = params.get("today"); // ?today=2026-11-05 for testing
+      if (p && /^\d{4}-\d{2}-\d{2}$/.test(p)) return p;
+      return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+    })();
+    const niceDate = (iso, opts = { weekday: "long", day: "numeric", month: "long" }) =>
+      iso ? new Intl.DateTimeFormat("en-GB", { timeZone: TZ, ...opts }).format(new Date(iso + "T12:00:00Z")) : "";
+    const shortDate = iso => niceDate(iso, { weekday: "short", day: "numeric", month: "short" });
+    const fmtTime = e => {
+      const s = e.start || "", en = e.end || "";
+      if (s && en) return `${s} to ${en}`;
+      return s || e.time || "";
+    };
+    const isPast = e => e.date < todayIso;
+    const isGone = e => e.status === "no_longer_listed";
+    const metres = m => m >= 1000 ? `${(m / 1000).toFixed(m % 1000 ? 1 : 0)} km` : `${m} m`;
+    const noFireworks = e => /no fireworks/i.test(e.notes || "");
     function normaliseType(t) {
-      if (!t) return "";
-      const x = String(t).trim().toLowerCase();
-      if (x.startsWith("pub")) return "Public";
-      if (x.startsWith("pri")) return "Private";
-      return t;
+      const x = String(t || "").trim().toLowerCase();
+      return x.startsWith("pub") ? "Public" : "Private";
     }
 
-    // --- Colored pin icons (inline SVG, no CDN) ---
-    function markerIcon(color) {
-      const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" aria-hidden="true" focusable="false">
-          <path fill="${color}" stroke="#000" stroke-opacity="0.15"
-                d="M12 2c-5.5 0-10 4.5-10 10 0 7.5 10 20 10 20s10-12.5 10-20c0-5.5-4.5-10-10-10z"/>
-          <circle cx="12" cy="12" r="4" fill="white"/>
-        </svg>`;
-      const url = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
-      return L.icon({
-        iconUrl: url,
-        iconSize: [24, 36],
-        iconAnchor: [12, 34],
-        popupAnchor: [0, -28]
-      });
+    // ---------- icons ----------
+    function pinIcon(color, size, opts = {}) {
+      const [w, h] = size;
+      const dash = opts.dashed ? 'stroke-dasharray="3 2" stroke="#555" stroke-width="1.5"' : 'stroke="#000" stroke-opacity="0.25"';
+      const inner = opts.star
+        ? '<path fill="#fff" d="M12 6.2l1.7 3.5 3.8.5-2.8 2.7.7 3.8L12 14.9l-3.4 1.8.7-3.8-2.8-2.7 3.8-.5z"/>'
+        : '<circle cx="12" cy="12" r="3.8" fill="#fff"/>';
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36"><path fill="${color}" ${dash} d="M12 1.5C6.2 1.5 1.5 6.2 1.5 12c0 7.8 10.5 22 10.5 22S22.5 19.8 22.5 12C22.5 6.2 17.8 1.5 12 1.5z"/>${inner}</svg>`;
+      return L.icon({ iconUrl: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg), iconSize: [w, h], iconAnchor: [w / 2, h - 2], popupAnchor: [0, -h + 8] });
     }
     const ICONS = {
-      Public:  markerIcon("#2e7d32"),
-      Private: markerIcon("#1976d2"),
-      Unknown: markerIcon("#757575")
+      Public: pinIcon("#2e7d32", [30, 45], { star: true }),
+      Private: pinIcon("#1976d2", [22, 33]),
+      PastPublic: pinIcon("#9e9e9e", [26, 39], { star: true }),
+      Past: pinIcon("#9e9e9e", [20, 30]),
+      Gone: pinIcon("#e0e0e0", [22, 33], { dashed: true }),
     };
+    function iconFor(e) {
+      if (isGone(e)) return ICONS.Gone;
+      if (isPast(e)) return e.type === "Public" ? ICONS.PastPublic : ICONS.Past;
+      return ICONS[e.type];
+    }
 
-    // ---- Map setup ----
-    const map = L.map('map').setView(GSY_CENTER, 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
+    // ---------- map ----------
+    const map = L.map("map", { zoomSnap: 0.5 }).setView(GSY_CENTER, 12);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
     }).addTo(map);
 
-    const markersLayer = L.layerGroup().addTo(map);
-    let allEvents = [];
-
-    // ---- Collapsible Filter control ----
-    const FilterControl = L.Control.extend({
-      onAdd: function() {
-        const wrapper = L.DomUtil.create('div', 'filter-wrapper filter-collapsed'); // start collapsed
-        // Toggle button
-        const btn = L.DomUtil.create('button', 'filter-toggle', wrapper);
-        btn.setAttribute('type', 'button');
-        btn.setAttribute('aria-expanded', 'false');
-        btn.setAttribute('aria-controls', 'filter-panel');
-        btn.innerHTML = 'Filters &#9662;'; // ▼
-        // Panel
-        const panel = L.DomUtil.create('div', 'filter-control', wrapper);
-        panel.id = 'filter-panel';
-        panel.innerHTML = `
-          <h3>Filter</h3>
-          <div class="filter-row">
-            <label for="dateSelect">Date</label>
-            <select id="dateSelect">
-              <option value="__all__">All dates</option>
-            </select>
-          </div>
-          <div class="filter-row">
-            <label>Type</label>
-            <div>
-              <label style="font-weight:400"><input type="checkbox" id="chkPublic" checked> Public</label>
-            </div>
-            <div>
-              <label style="font-weight:400"><input type="checkbox" id="chkPrivate" checked> Private</label>
-            </div>
-          </div>
-        `;
-
-        // Toggle behavior
-        function toggle() {
-          const collapsed = wrapper.classList.toggle('filter-collapsed');
-          btn.setAttribute('aria-expanded', String(!collapsed));
-          btn.innerHTML = collapsed ? 'Filters &#9656;' : 'Filters &#9662;'; // ▶ / ▼
-        }
-        btn.addEventListener('click', toggle);
-
-        // Prevent map interactions when using UI
-        L.DomEvent.disableClickPropagation(wrapper);
-        L.DomEvent.disableScrollPropagation(wrapper);
-        return wrapper;
-      },
-      onRemove: function() {}
+    // Only cluster pins that sit almost on top of each other (shared postcode or road).
+    const cluster = L.markerClusterGroup({
+      maxClusterRadius: 14,
+      spiderfyOnMaxZoom: true,
+      showCoverageOnHover: false,
+      zoomToBoundsOnClick: false,
+      iconCreateFunction: c => L.divIcon({ html: `<div class="fw-cluster" style="width:28px;height:28px">${c.getChildCount()}</div>`, className: "", iconSize: [28, 28] })
     });
-    const filterCtl = new FilterControl({ position: 'topleft' }).addTo(map);
+    cluster.on("clusterclick", a => a.layer.spiderfy());
+    map.addLayer(cluster);
 
-    // ---- Legend control ----
-    const LegendControl = L.Control.extend({
-      onAdd: function() {
-        const div = L.DomUtil.create('div', 'legend');
-        div.innerHTML = `
-          <div class="row"><span class="swatch public"></span> Public</div>
-          <div class="row"><span class="swatch private"></span> Private</div>
-          <div class="row"><span class="swatch unknown"></span> Unknown</div>
-        `;
-        L.DomEvent.disableClickPropagation(div);
-        L.DomEvent.disableScrollPropagation(div);
-        return div;
-      },
-      onRemove: function() {}
-    });
-    new LegendControl({ position: 'bottomleft' }).addTo(map);
-
-    function getFilterValues() {
-      const sel = document.getElementById('dateSelect');
-      const valDate = sel ? sel.value : "__all__";
-      const showPublic = document.getElementById('chkPublic')?.checked ?? true;
-      const showPrivate = document.getElementById('chkPrivate')?.checked ?? true;
-      return { valDate, showPublic, showPrivate };
+    let homeLayer = L.layerGroup().addTo(map);
+    let msgEl = null;
+    function mapMessage(text) {
+      if (!msgEl) { msgEl = document.createElement("div"); msgEl.className = "map-msg"; document.getElementById("map").appendChild(msgEl); }
+      msgEl.textContent = text; msgEl.hidden = !text;
     }
 
-    function populateDateFilter(events) {
-      const sel = document.getElementById('dateSelect');
-      if (!sel) return;
-      const isoDates = Array.from(new Set(events.map(e => e.date).filter(Boolean))).sort();
-      while (sel.options.length > 1) sel.remove(1);
-      isoDates.forEach(iso => {
-        const opt = document.createElement('option');
-        opt.value = iso;
-        opt.textContent = formatNiceDate(iso);
-        sel.appendChild(opt);
-      });
-      sel.addEventListener('change', renderMarkers);
-      document.getElementById('chkPublic').addEventListener('change', renderMarkers);
-      document.getElementById('chkPrivate').addEventListener('change', renderMarkers);
+    // ---------- state ----------
+    const state = { events: [], prev: null, date: "__all__", showPublic: true, showPrivate: true, home: null, radius: 1000, picking: false, markers: new Map() };
+
+    // ---------- popup ----------
+    function popupHtml(e) {
+      const lines = [];
+      lines.push(`<div class="nm">${esc(e.name || e.full_address)}</div>`);
+      if (e.name && e.full_address && e.full_address !== e.name) lines.push(`<div class="line">${esc(e.full_address.replace(e.name + ", ", ""))}</div>`);
+      lines.push(`<div class="line"><strong>${esc(niceDate(e.date))}</strong>, ${esc(fmtTime(e))}</div>`);
+      if (e.fireworks_at) lines.push(`<div class="line">Fireworks at ${esc(e.fireworks_at)}</div>`);
+      lines.push(`<div class="line">${esc(e.type)} display${noFireworks(e) ? " (listed as no fireworks)" : ""}</div>`);
+      if (e.notes && !noFireworks(e)) lines.push(`<div class="line">${esc(e.notes)}</div>`);
+      if (e.rescheduled_from) lines.push(`<div class="line"><span class="badge moved">Moved</span> previously listed for ${esc(niceDate(e.rescheduled_from))}</div>`);
+      if (isGone(e)) lines.push(`<div class="line"><span class="badge warn">No longer listed</span> It has been removed from the States list and may have been cancelled or moved.</div>`);
+      if (isPast(e)) lines.push(`<div class="line small">This display has already taken place.</div>`);
+      const prec = { postcode: "postcode", address: "address", street: "road", parish: "parish only" }[e.geo_precision];
+      lines.push(`<div class="note">Location approximate${prec ? ` (by ${prec})` : ""}.</div>`);
+      return `<div class="pp">${lines.join("")}</div>`;
     }
 
-    function makePopupHtml(e) {
-      const address = e.full_address || e.address || e.venue || e.title || "Address unavailable";
-      const dateStr = e.date ? formatNiceDate(e.date) : "";
-      const timeStr = e.time ? String(e.time) : "";
-      const typeStr = normaliseType(e.type || "");
-      const pc = e.postcode || "";
-      const notes = e.notes ? String(e.notes).trim() : "";
-
-      return `
-        <div class="popup-content">
-          <div class="line address">${escapeHtml(address)}</div>
-          ${dateStr ? `<div class="line">${escapeHtml(dateStr)}</div>` : ``}
-          ${timeStr ? `<div class="line">${escapeHtml(timeStr)}</div>` : ``}
-          ${typeStr ? `<div class="line">${escapeHtml(typeStr)}</div>` : ``}
-          ${pc ? `<div class="line">${escapeHtml(pc)}</div>` : ``}
-          ${notes ? `<div class="line">${escapeHtml(notes)}</div>` : ``}
-        </div>
-      `;
+    // ---------- filters ----------
+    function visibleEvents() {
+      return state.events.filter(e => {
+        const typeOK = e.type === "Public" ? state.showPublic : state.showPrivate;
+        const dateOK = state.date === "__all__" ? true : e.date === state.date;
+        return typeOK && dateOK;
+      });
     }
 
-    function renderMarkers() {
-      markersLayer.clearLayers();
-      const { valDate, showPublic, showPrivate } = getFilterValues();
-      const filtered = allEvents.filter(e => {
-        const t = normaliseType(e.type);
-        const typeOK = (t === "Public" && showPublic) ||
-                       (t === "Private" && showPrivate) ||
-                       (!t && (showPublic || showPrivate));
-        const dateOK = (valDate === "__all__") || (e.date === valDate);
-        return typeOK && dateOK && typeof e.lat === "number" && typeof e.lon === "number";
+    function buildChips() {
+      const box = document.getElementById("dateChips");
+      const dates = [...new Set(state.events.map(e => e.date))].sort();
+      const count = d => state.events.filter(e => e.date === d && !isGone(e)).length;
+      const chips = [["__all__", "All nights", state.events.filter(e => !isGone(e)).length, false]]
+        .concat(dates.map(d => [d, d === todayIso ? "Tonight" : shortDate(d), count(d), d < todayIso]));
+      box.innerHTML = "";
+      chips.forEach(([val, label, n, past]) => {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "chip" + (past ? " past" : "");
+        b.setAttribute("aria-pressed", String(state.date === val));
+        b.innerHTML = `${esc(label)}<span class="n">${n}</span>`;
+        if (past) b.title = "Already taken place";
+        b.addEventListener("click", () => { state.date = val; render({ fit: true }); });
+        box.appendChild(b);
       });
+    }
 
-      const latlngs = [];
-      filtered.forEach(e => {
-        const t = normaliseType(e.type);
-        const typeKey = t === "Public" ? "Public" : (t === "Private" ? "Private" : "Unknown");
-        const className = (t === "Public") ? "popup-public" : "";
-        const marker = L.marker([e.lat, e.lon], { icon: ICONS[typeKey] }).addTo(markersLayer);
-        marker.bindPopup(makePopupHtml(e), { className });
-        latlngs.push([e.lat, e.lon]);
+    function defaultDate() {
+      const dates = [...new Set(state.events.filter(e => !isGone(e)).map(e => e.date))].sort();
+      if (params.get("date")) return params.get("date");
+      if (dates.includes(todayIso)) return todayIso;
+      const next = dates.find(d => d > todayIso);
+      // Before the season starts show everything; once a night is close, focus on it.
+      if (next) {
+        const days = (Date.parse(next) - Date.parse(todayIso)) / 864e5;
+        return days <= 1 ? next : "__all__";
+      }
+      return "__all__";
+    }
+
+    // ---------- markers ----------
+    function renderMarkers(fit) {
+      cluster.clearLayers();
+      state.markers.clear();
+      const vis = visibleEvents().filter(e => typeof e.lat === "number" && typeof e.lon === "number");
+      vis.forEach(e => {
+        const m = L.marker([e.lat, e.lon], {
+          icon: iconFor(e),
+          title: `${e.name}, ${shortDate(e.date)} ${fmtTime(e)}`,
+          zIndexOffset: e.type === "Public" && !isPast(e) ? 1000 : 0,
+          opacity: isGone(e) ? 0.85 : 1
+        });
+        m.bindPopup(popupHtml(e), { className: e.type === "Public" && !isPast(e) && !isGone(e) ? "popup-public" : "" });
+        cluster.addLayer(m);
+        state.markers.set(e.id, m);
       });
-
-      if (latlngs.length) {
-        map.fitBounds(latlngs, { padding: [40, 40] });
-      } else {
-        map.setView(GSY_CENTER, 12);
+      if (fit) {
+        const pts = vis.map(e => [e.lat, e.lon]);
+        if (state.home) pts.push(state.home);
+        if (pts.length > 1) map.fitBounds(pts, { padding: [30, 30], maxZoom: 15 });
+        else if (pts.length === 1) map.setView(pts[0], 15);
+        else map.setView(GSY_CENTER, 12);
       }
     }
 
-    // ---- Load data and go ----
-    fetch('events.json')
-      .then(r => r.json())
-      .then(events => {
-        allEvents = (Array.isArray(events) ? events : []).map(e => {
-          const obj = { ...e };
-          if (obj.lat !== null && obj.lat !== undefined) obj.lat = Number(obj.lat);
-          if (obj.lon !== null && obj.lon !== undefined) obj.lon = Number(obj.lon);
-          obj.type = normaliseType(obj.type);
-          return obj;
-        });
-        const missing = allEvents.filter(e => !(typeof e.lat === "number" && typeof e.lon === "number"));
-        if (missing.length) console.warn("Events missing lat/lon (not shown):", missing);
+    // ---------- list ----------
+    function renderList() {
+      const el = document.getElementById("list");
+      const vis = visibleEvents();
+      if (!vis.length) {
+        el.innerHTML = `<p class="empty">No displays match these filters.</p>`;
+        return;
+      }
+      const byDate = {};
+      vis.forEach(e => (byDate[e.date] ||= []).push(e));
+      const sortKey = e => `${isGone(e) ? 1 : 0}${e.type === "Public" ? 0 : 1}${e.fireworks_at || e.start || "99"}`;
+      el.innerHTML = Object.keys(byDate).sort().map(d => {
+        const items = byDate[d].sort((a, b) => (a.start || "99").localeCompare(b.start || "99") || sortKey(a).localeCompare(sortKey(b)));
+        const nPub = items.filter(e => e.type === "Public" && !isGone(e)).length;
+        const head = `${esc(niceDate(d))}${d === todayIso ? " (tonight)" : ""}${d < todayIso ? ' <span class="past-tag">(past)</span>' : ""}`;
+        return `<div class="day"><h3>${head}<span class="sr-only">, ${items.length} displays, ${nPub} public</span></h3>${items.map(e => {
+          const cls = ["item", e.type === "Public" ? "public" : "", isGone(e) ? "gone" : ""].join(" ");
+          const dot = isGone(e) || isPast(e) ? "past" : e.type.toLowerCase();
+          const badges = (e.type === "Public" ? '<span class="badge pub">Public</span>' : "")
+            + (e.rescheduled_from ? '<span class="badge moved">Moved</span>' : "")
+            + (isGone(e) ? '<span class="badge warn">No longer listed</span>' : "")
+            + (noFireworks(e) ? '<span class="badge warn">No fireworks</span>' : "");
+          const sub = [e.full_address !== e.name ? e.full_address.replace(e.name + ", ", "") : e.parish, e.fireworks_at ? `fireworks at ${e.fireworks_at}` : ""].filter(Boolean).join(" · ");
+          return `<button type="button" class="${cls}" data-id="${esc(e.id)}">
+            <span class="dot ${dot}" aria-hidden="true"></span>
+            <span><span class="nm">${esc(e.name)}</span>${badges}<br><span class="sub">${esc(sub)}</span></span>
+            <span class="tm">${esc(fmtTime(e))}</span></button>`;
+        }).join("")}</div>`;
+      }).join("");
+      el.querySelectorAll(".item").forEach(b => b.addEventListener("click", () => focusEvent(b.dataset.id)));
+    }
 
-        // Auto-collapse filter on small screens (already default), expand on larger screens
-        if (window.matchMedia('(min-width: 641px)').matches) {
-          const wrapper = document.querySelector('.filter-wrapper');
-          if (wrapper) wrapper.classList.remove('filter-collapsed');
-          const btn = document.querySelector('.filter-toggle');
-          if (btn) btn.setAttribute('aria-expanded', 'true');
-        }
+    function focusEvent(id) {
+      const m = state.markers.get(id);
+      if (!m) return;
+      cluster.zoomToShowLayer(m, () => m.openPopup());
+      if (window.matchMedia("(max-width: 760px)").matches) document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
 
-        populateDateFilter(allEvents);
-        renderMarkers();
-      })
-      .catch(err => {
-        console.error("Failed to load events.json", err);
-        alert("Failed to load events.json. Check console for details.");
-      });
+    // ---------- near me ----------
+    function renderNear() {
+      const box = document.getElementById("near");
+      homeLayer.clearLayers();
+      if (!state.home && !state.picking) { box.hidden = true; return; }
+      box.hidden = false;
+      if (!state.home) {
+        box.innerHTML = `<h2>Displays near you</h2><p>Tap the map where you live to see how many displays are registered nearby.</p>
+          <p class="small">Your location stays on your device and is not sent anywhere.</p>
+          <div class="row"><button type="button" class="linkish" id="nearCancel">Cancel</button></div>`;
+        box.querySelector("#nearCancel").onclick = clearHome;
+        return;
+      }
+      L.circle(state.home, { radius: state.radius, color: "#c2410c", weight: 1.5, fillOpacity: 0.04 }).addTo(homeLayer);
+      L.marker(state.home, { icon: L.divIcon({ className: "home-pin", iconSize: [14, 14] }), keyboard: false, interactive: false }).addTo(homeLayer);
+
+      const upcoming = state.events.filter(e => !isGone(e) && e.date >= todayIso && typeof e.lat === "number");
+      const near = upcoming.filter(e => map.distance(state.home, [e.lat, e.lon]) <= state.radius);
+      const byDate = {};
+      near.forEach(e => (byDate[e.date] ||= []).push(e));
+      const nights = Object.keys(byDate).sort();
+      const listHtml = nights.length
+        ? `<ul>${nights.map(d => {
+            const xs = byDate[d];
+            const starts = xs.map(e => e.fireworks_at || e.start).filter(Boolean).sort();
+            const ends = xs.map(e => e.end || e.fireworks_at || e.start).filter(Boolean).sort();
+            const span = starts.length ? `, ${starts[0]} to ${ends[ends.length - 1]}` : "";
+            const pub = xs.filter(e => e.type === "Public").length;
+            return `<li><strong>${esc(d === todayIso ? "Tonight" : niceDate(d))}</strong>: ${xs.length} display${xs.length > 1 ? "s" : ""}${pub ? ` (${pub} public)` : ""}${esc(span)}</li>`;
+          }).join("")}</ul>`
+        : `<p>No upcoming registered displays within ${metres(state.radius)}.</p>`;
+      const busiest = nights.slice().sort((a, b) => byDate[b].length - byDate[a].length)[0];
+      box.innerHTML = `<h2>Within ${metres(state.radius)} of your spot</h2>${listHtml}
+        ${busiest && nights.length > 1 ? `<p>Busiest night near you: <strong>${esc(niceDate(busiest))}</strong>.</p>` : ""}
+        <p class="small">Not every display is registered, and fireworks can be heard well beyond this distance. Pet owners can find advice from the <a href="${GSPCA_URL}" target="_blank" rel="noopener">GSPCA</a>.</p>
+        <div class="row">
+          <label>Distance <select id="radiusSel">
+            ${[500, 1000, 2000, 3000].map(r => `<option value="${r}"${r === state.radius ? " selected" : ""}>${metres(r)}</option>`).join("")}
+          </select></label>
+          <button type="button" class="linkish" id="nearMove">Move my spot</button>
+          <button type="button" class="linkish" id="nearClear">Clear</button>
+        </div>`;
+      box.querySelector("#radiusSel").onchange = ev => { state.radius = +ev.target.value; renderNear(); map.fitBounds(L.latLng(state.home).toBounds(state.radius * 2.4), { maxZoom: 16 }); };
+      box.querySelector("#nearMove").onclick = () => { state.picking = true; mapMessage("Tap the map to move your spot"); };
+      box.querySelector("#nearClear").onclick = clearHome;
+    }
+
+    function setHome(latlng) {
+      state.home = [latlng.lat ?? latlng[0], latlng.lng ?? latlng[1]];
+      state.picking = false; mapMessage("");
+      renderNear();
+      map.fitBounds(L.latLng(state.home).toBounds(state.radius * 2.4), { maxZoom: 16 });
+    }
+    function clearHome() { state.home = null; state.picking = false; mapMessage(""); renderNear(); }
+
+    document.getElementById("nearBtn").addEventListener("click", () => {
+      const startPicking = (why) => { state.picking = true; renderNear(); mapMessage(why || "Tap the map where you live"); };
+      if (!("geolocation" in navigator)) return startPicking();
+      mapMessage("Finding your location…");
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          const ll = L.latLng(pos.coords.latitude, pos.coords.longitude);
+          // Off-island (or wildly inaccurate) fixes are no use here.
+          if (ll.distanceTo(GSY_CENTER) > 15000) return startPicking("You look to be off-island. Tap the map to choose a spot");
+          setHome(ll);
+        },
+        () => startPicking("Location not available here. Tap the map where you live"),
+        { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
+      );
+    });
+    map.on("click", ev => { if (state.picking) setHome(ev.latlng); });
+
+    // ---------- comparison with last year ----------
+    function renderCompare() {
+      const prev = state.prev;
+      if (!prev || !prev.events?.length) return;
+      const cur = state.events.filter(e => !isGone(e));
+      const parishes = [...new Set([...cur, ...prev.events].map(e => e.parish).filter(Boolean))];
+      const cnt = (xs, p) => xs.filter(e => e.parish === p).length;
+      const rows = parishes.map(p => [p, cnt(cur, p), cnt(prev.events, p)]).sort((a, b) => b[1] - a[1] || b[2] - a[2]);
+      const max = Math.max(1, ...rows.flatMap(r => [r[1], r[2]]));
+      const pub = xs => xs.filter(e => normaliseType(e.type) === "Public").length;
+      const peak = xs => { const c = {}; xs.forEach(e => c[e.date] = (c[e.date] || 0) + 1); const d = Object.keys(c).sort((a, b) => c[b] - c[a])[0]; return d ? `${niceDate(d, { weekday: "long", day: "numeric", month: "long" })} (${c[d]})` : "none"; };
+      const thisYear = state.year, lastYear = prev.year;
+      document.getElementById("compareBody").innerHTML = `
+        <p>${thisYear}: <strong>${cur.length}</strong> displays registered so far, ${pub(cur)} public. Busiest night: ${esc(peak(cur))}.</p>
+        <p>${lastYear}: <strong>${prev.events.length}</strong> displays, ${pub(prev.events)} public. Busiest night: ${esc(peak(prev.events))}.</p>
+        <table class="cmp-table"><thead><tr><th>Parish</th><th>${thisYear}</th><th>${lastYear}</th><th style="width:40%"><span class="sr-only">Chart</span></th></tr></thead><tbody>
+        ${rows.map(([p, a, b]) => `<tr><td>${esc(p)}</td><td>${a}</td><td>${b}</td><td style="text-align:left"><span class="bar" style="width:${a / max * 100}%"></span><br><span class="bar prev" style="width:${b / max * 100}%"></span></td></tr>`).join("")}
+        </tbody></table>
+        <p class="small">The ${lastYear} figures are the final list as mapped by The Quarry. This year's list is still being added to, so early comparisons understate ${thisYear}.</p>`;
+      document.getElementById("compare").hidden = false;
+    }
+
+    // ---------- render ----------
+    function render({ fit = false } = {}) {
+      buildChips();
+      renderMarkers(fit);
+      renderList();
+      if (state.home) renderNear();
+    }
+
+    document.getElementById("chkPublic").addEventListener("change", ev => { state.showPublic = ev.target.checked; render(); });
+    document.getElementById("chkPrivate").addEventListener("change", ev => { state.showPrivate = ev.target.checked; render(); });
+
+    function showError(text) {
+      document.getElementById("list").innerHTML = `<p class="empty">${esc(text)}</p>`;
+      mapMessage(text);
+    }
+
+    // ---------- load ----------
+    const bust = `?v=${Math.floor(Date.now() / 300000)}`; // refresh at most every 5 minutes through caches
+    Promise.all([
+      fetch("events.json" + bust).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }),
+      fetch("archive/2025.json").then(r => r.ok ? r.json() : null).catch(() => null)
+    ]).then(([doc, prev]) => {
+      const list = Array.isArray(doc) ? doc : (doc.events || []);
+      state.year = doc.year || Number((list[0]?.date || todayIso).slice(0, 4));
+      state.events = list.map((e, i) => ({
+        ...e,
+        id: e.id || `e${i}`,
+        name: e.name || (e.full_address || e.venue || "").split(",")[0],
+        type: normaliseType(e.type),
+        lat: e.lat == null ? null : Number(e.lat),
+        lon: e.lon == null ? null : Number(e.lon)
+      }));
+      state.prev = prev && prev.year !== state.year ? prev : null;
+
+      const live = state.events.filter(e => !isGone(e));
+      const nPub = live.filter(e => e.type === "Public").length;
+      document.getElementById("title").textContent = `Firework displays in Guernsey ${state.year}`;
+      document.getElementById("summary").textContent = `${live.length} registered, ${nPub} public`;
+      if (doc.checked) {
+        const t = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(doc.checked));
+        document.getElementById("checked").textContent = `List checked ${t}.`;
+      }
+      const missing = state.events.filter(e => typeof e.lat !== "number");
+      if (missing.length) console.warn("Events without coordinates (listed but not mapped):", missing);
+
+      state.date = defaultDate();
+      render({ fit: true });
+      renderCompare();
+    }).catch(err => {
+      console.error("Failed to load events.json", err);
+      showError("Sorry, the list of displays could not be loaded. Please try again shortly.");
+    });
+  })();
   </script>
 </body>
 </html>

@@ -1,0 +1,398 @@
+{
+  "2nd guernsey scout group wayfarer centre rue du haut vale gy6 8ng": {
+    "lat": 49.478509,
+    "lon": -2.564176,
+    "precision": "address",
+    "query": "2025 map: same venue"
+  },
+  "braye road vale gy3 5pe": {
+    "lat": 49.486785,
+    "lon": -2.523378,
+    "precision": "street",
+    "query": "Photon: Braye Road"
+  },
+  "clos l ecole brock road st peter port gy1 1rj": {
+    "lat": 49.458734,
+    "lon": -2.546824,
+    "precision": "postcode",
+    "query": "Photon postcode GY1 1RJ"
+  },
+  "duveaux road st sampson gy2 4yb": {
+    "lat": 49.479606,
+    "lon": -2.536946,
+    "precision": "street",
+    "query": "Photon: Duveaux Road"
+  },
+  "green lanes st peter port gy1 1tn": {
+    "lat": 49.461391,
+    "lon": -2.555303,
+    "precision": "street",
+    "query": "Photon: Green Lanes"
+  },
+  "la brigade st andrew gy4": {
+    "lat": 49.446609,
+    "lon": -2.562259,
+    "precision": "street",
+    "query": "Photon: La Rue de la Brigade"
+  },
+  "la houguette primary school route des paysans st pierre du bois gy7 9la": {
+    "lat": 49.449911,
+    "lon": -2.637349,
+    "precision": "address",
+    "query": "Photon: La Houguette Primary School"
+  },
+  "la robergerie st sampson gy2 4ng": {
+    "lat": 49.480514,
+    "lon": -2.53164,
+    "precision": "street",
+    "query": "Photon: Robergerie Road"
+  },
+  "la rochelle road vale gy3 5dz": {
+    "lat": 49.497994,
+    "lon": -2.51022,
+    "precision": "street",
+    "query": "Photon: La Rochelle Road"
+  },
+  "longue rue vale gy6 8db": {
+    "lat": 49.4759,
+    "lon": -2.560292,
+    "precision": "street",
+    "query": "Photon: La Longue Rue"
+  },
+  "pc:GY1 1FR": {
+    "lat": 49.462312,
+    "lon": -2.55816,
+    "precision": "postcode",
+    "query": "2025 map: Collings Road, St. Peter Port"
+  },
+  "pc:GY1 1PU": {
+    "lat": 49.45364,
+    "lon": -2.54909,
+    "precision": "postcode",
+    "query": "2025 map: Queens Road, St Peter Port"
+  },
+  "pc:GY1 1QF": {
+    "lat": 49.451657,
+    "lon": -2.55272,
+    "precision": "postcode",
+    "query": "2025 map: Kings Road, St. Peter Port"
+  },
+  "pc:GY1 1YJ": {
+    "lat": 49.459643,
+    "lon": -2.555756,
+    "precision": "postcode",
+    "query": "2025 map: Rohais, St. Peter Port"
+  },
+  "pc:GY1 1ZB": {
+    "lat": 49.465145,
+    "lon": -2.539761,
+    "precision": "postcode",
+    "query": "2025 map: Rougeval, St Peter Port"
+  },
+  "pc:GY1 2EN": {
+    "lat": 49.47066,
+    "lon": -2.554068,
+    "precision": "postcode",
+    "query": "2025 map: Route De La Ramee, St Peter Port"
+  },
+  "pc:GY1 2UL": {
+    "lat": 49.465577,
+    "lon": -2.564876,
+    "precision": "postcode",
+    "query": "2025 map: Guernsey Raiders Rugby Club , Footes Lane, St Andrews"
+  },
+  "pc:GY2 4AD": {
+    "lat": 49.48202,
+    "lon": -2.559245,
+    "precision": "postcode",
+    "query": "2025 map: Rue a Chiens, St. Sampson"
+  },
+  "pc:GY2 4BB": {
+    "lat": 49.473541,
+    "lon": -2.540718,
+    "precision": "postcode",
+    "query": "2025 map: Belgrave Wanderers Football Club, Victoria Avenue, St Sampsons"
+  },
+  "pc:GY2 4BD": {
+    "lat": 49.473104,
+    "lon": -2.537443,
+    "precision": "postcode",
+    "query": "2025 map: Victoria Avenue, St. Sampson"
+  },
+  "pc:GY2 4EB": {
+    "lat": 49.483589,
+    "lon": -2.533552,
+    "precision": "postcode",
+    "query": "2025 map: Route Militaire, St Sampson"
+  },
+  "pc:GY2 4GF": {
+    "lat": 49.474823,
+    "lon": -2.54773,
+    "precision": "postcode",
+    "query": "2025 map: Les Osmonds St. Sampson"
+  },
+  "pc:GY2 4GX": {
+    "lat": 49.482794,
+    "lon": -2.55121,
+    "precision": "postcode",
+    "query": "2025 map: Les Petites Capelles, St Sampson"
+  },
+  "pc:GY2 4HW": {
+    "lat": 49.478584,
+    "lon": -2.531157,
+    "precision": "postcode",
+    "query": "2025 map: Rue Des Pointues Rocques, St. Sampson"
+  },
+  "pc:GY2 4NA": {
+    "lat": 49.484914,
+    "lon": -2.52585,
+    "precision": "postcode",
+    "query": "2025 map: Saltpans Road, St. Sampson"
+  },
+  "pc:GY2 4RS": {
+    "lat": 49.492095,
+    "lon": -2.541187,
+    "precision": "postcode",
+    "query": "2025 map: La Route De L'Islet, St. Sampson"
+  },
+  "pc:GY2 4TA": {
+    "lat": 49.492497,
+    "lon": -2.560414,
+    "precision": "postcode",
+    "query": "2025 map: Route De Vaugrat, St. Sampson"
+  },
+  "pc:GY2 4TJ": {
+    "lat": 49.492049,
+    "lon": -2.568766,
+    "precision": "postcode",
+    "query": "2025 map: Route de la Passee, St Sampson"
+  },
+  "pc:GY2 4WA": {
+    "lat": 49.482667,
+    "lon": -2.549214,
+    "precision": "postcode",
+    "query": "2025 map: Hougues Magues Lane, St. Sampson"
+  },
+  "pc:GY3 5AA": {
+    "lat": 49.492559,
+    "lon": -2.535095,
+    "precision": "postcode",
+    "query": "2025 map: La Ville Baudu, Vale"
+  },
+  "pc:GY3 5EG": {
+    "lat": 49.493084,
+    "lon": -2.506173,
+    "precision": "postcode",
+    "query": "2025 map: Rue Godfrey, Vale"
+  },
+  "pc:GY3 5HU": {
+    "lat": 49.495269,
+    "lon": -2.52546,
+    "precision": "postcode",
+    "query": "2025 map: Rue Des Landes, Vale"
+  },
+  "pc:GY3 5LJ": {
+    "lat": 49.493047,
+    "lon": -2.513093,
+    "precision": "postcode",
+    "query": "2025 map: Rue De L'Ecole, Vale"
+  },
+  "pc:GY3 5PW": {
+    "lat": 49.488164,
+    "lon": -2.529329,
+    "precision": "postcode",
+    "query": "2025 map: Les Mares Pellees, Vale"
+  },
+  "pc:GY4 6AL": {
+    "lat": 49.43465,
+    "lon": -2.543112,
+    "precision": "postcode",
+    "query": "2025 map: Le Varclin, St Martins"
+  },
+  "pc:GY4 6EF": {
+    "lat": 49.43472,
+    "lon": -2.543359,
+    "precision": "postcode",
+    "query": "2025 map: La Fosse, St Martin"
+  },
+  "pc:GY4 6LR": {
+    "lat": 49.43982,
+    "lon": -2.551819,
+    "precision": "postcode",
+    "query": "2025 map: Les Traudes, St Martin"
+  },
+  "pc:GY4 6NB": {
+    "lat": 49.439694,
+    "lon": -2.545801,
+    "precision": "postcode",
+    "query": "2025 map: Hubits De Bas, St. Martin"
+  },
+  "pc:GY4 6PG": {
+    "lat": 49.441321,
+    "lon": -2.558165,
+    "precision": "postcode",
+    "query": "2025 map: Rue Cauchez, St. Martin"
+  },
+  "pc:GY4 6QG": {
+    "lat": 49.433062,
+    "lon": -2.56771,
+    "precision": "postcode",
+    "query": "2025 map: La Villette Hotel, Rue De La Villette, St. Martin"
+  },
+  "pc:GY4 6RZ": {
+    "lat": 49.436566,
+    "lon": -2.551118,
+    "precision": "postcode",
+    "query": "2025 map: St Martin's AC, Blanche Pierre Lane, St Martins, GY4 6RZ"
+  },
+  "pc:GY4 6UN": {
+    "lat": 49.427784,
+    "lon": -2.576926,
+    "precision": "postcode",
+    "query": "2025 map: Rue de la Falaise, St. Martin"
+  },
+  "pc:GY5 7BH": {
+    "lat": 49.469155,
+    "lon": -2.602117,
+    "precision": "postcode",
+    "query": "2025 map: Vazon Elim Church, Route De La Mare Castel"
+  },
+  "pc:GY5 7DT": {
+    "lat": 49.460429,
+    "lon": -2.591232,
+    "precision": "postcode",
+    "query": "2025 map: Rue Des Eturs, Castel"
+  },
+  "pc:GY5 7FX": {
+    "lat": 49.483604,
+    "lon": -2.583471,
+    "precision": "postcode",
+    "query": "2025 map: Les Grandes Rocques, Castel"
+  },
+  "pc:GY5 7HL": {
+    "lat": 49.474503,
+    "lon": -2.59747,
+    "precision": "postcode",
+    "query": "2025 map: La Banquette, Castel"
+  },
+  "pc:GY5 7LD": {
+    "lat": 49.458906,
+    "lon": -2.621081,
+    "precision": "postcode",
+    "query": "2025 map: Ruette Julienne, Castel"
+  },
+  "pc:GY5 7LE": {
+    "lat": 49.460238,
+    "lon": -2.621241,
+    "precision": "postcode",
+    "query": "2025 map: Rue Du Marais, Castel"
+  },
+  "pc:GY5 7NE": {
+    "lat": 49.462246,
+    "lon": -2.573019,
+    "precision": "postcode",
+    "query": "2025 map: Rectory Hill, Castel"
+  },
+  "pc:GY5 7YL": {
+    "lat": 49.479177,
+    "lon": -2.580097,
+    "precision": "postcode",
+    "query": "2025 map: Les Genats Estate, Castel"
+  },
+  "pc:GY6 8NB": {
+    "lat": 49.478509,
+    "lon": -2.564176,
+    "precision": "postcode",
+    "query": "2025 map: 2nd Guernsey Scout Group, Wayfarer Centre, Rue De Haut, Vale"
+  },
+  "pc:GY6 8SQ": {
+    "lat": 49.449228,
+    "lon": -2.575054,
+    "precision": "postcode",
+    "query": "2025 map: Route Des Talbots, St. Andrew"
+  },
+  "pc:GY6 8UL": {
+    "lat": 49.444095,
+    "lon": -2.579931,
+    "precision": "postcode",
+    "query": "2025 map: Route de St. Andre, St. Andrew"
+  },
+  "pc:GY7 9BU": {
+    "lat": 49.435337,
+    "lon": -2.655831,
+    "precision": "postcode",
+    "query": "2025 map: Route De La Lague, St Pierre du Bois"
+  },
+  "pc:GY7 9FQ": {
+    "lat": 49.450183,
+    "lon": -2.616448,
+    "precision": "postcode",
+    "query": "2025 map: Le Neuf Chemin, St. Savours"
+  },
+  "pc:GY7 9HX": {
+    "lat": 49.436385,
+    "lon": -2.642383,
+    "precision": "postcode",
+    "query": "2025 map: Rue du Coudre, St. Pierre du Bois"
+  },
+  "pc:GY7 9JS": {
+    "lat": 49.450959,
+    "lon": -2.629006,
+    "precision": "postcode",
+    "query": "2025 map: Rue du Pre Bourdon, St Saviour"
+  },
+  "pc:GY7 9LH": {
+    "lat": 49.452774,
+    "lon": -2.642868,
+    "precision": "postcode",
+    "query": "2025 map: Routes Des Adams, St. Pierre du Bois, GY7 9LH"
+  },
+  "pc:GY7 9QE": {
+    "lat": 49.458299,
+    "lon": -2.637473,
+    "precision": "postcode",
+    "query": "2025 map: Rue De La Hougue Bachele, St. Saviour"
+  },
+  "pc:GY7 9XB": {
+    "lat": 49.464904,
+    "lon": -2.628205,
+    "precision": "postcode",
+    "query": "2025 map: Route De La Marette, St. Saviour"
+  },
+  "pc:GY7 9YL": {
+    "lat": 49.439456,
+    "lon": -2.602706,
+    "precision": "postcode",
+    "query": "2025 map: Routes Des Bas Courtils, St. Saviour"
+  },
+  "pc:GY8 0BW": {
+    "lat": 49.429064,
+    "lon": -2.589128,
+    "precision": "postcode",
+    "query": "2025 map: La Rue Des Croisee Forest"
+  },
+  "pc:GY8 0HP": {
+    "lat": 49.426003,
+    "lon": -2.597669,
+    "precision": "postcode",
+    "query": "2025 map: Les Villets Forest"
+  },
+  "rocquettes road st peter port gy1 1xr": {
+    "lat": 49.458574,
+    "lon": -2.551909,
+    "precision": "street",
+    "query": "Photon: Rocquettes Road"
+  },
+  "rue de la hougue maban st saviour gy7 9jl": {
+    "lat": 49.449696,
+    "lon": -2.626429,
+    "precision": "street",
+    "query": "Photon: Rue de la Hougue Maban"
+  },
+  "verte rue belval road vale gy3 5lp": {
+    "lat": 49.489899,
+    "lon": -2.517046,
+    "precision": "street",
+    "query": "Photon: Belval Road (GY3 is north-east Vale)"
+  }
+}

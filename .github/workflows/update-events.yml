@@ -1,0 +1,41 @@
+name: Update fireworks list
+
+on:
+  schedule:
+    # Every two hours, 07:00 to 23:00 UTC, through the October to December season
+    - cron: "17 7-23/2 * 10-12 *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-events
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install beautifulsoup4
+
+      - name: Rebuild events.json from gov.gg
+        run: python scripts/update_events.py
+
+      - name: Commit if anything changed
+        run: |
+          if git diff --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "quarry-bot"
+          git config user.email "editor@thequarry.media"
+          git add events.json scripts/geocache.json
+          git commit -m "Update fireworks list from gov.gg"
+          git push
