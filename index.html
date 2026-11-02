@@ -298,9 +298,26 @@
       });
     }
 
+    // ?night=thu | thursday | tonight | all | 5 | 2026-11-05 (also accepted as ?date=)
+    function nightFromParam(raw, dates) {
+      const v = String(raw || "").trim().toLowerCase();
+      if (!v) return null;
+      if (v === "all") return "__all__";
+      if (v === "tonight" || v === "today") return dates.includes(todayIso) ? todayIso : null;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return dates.includes(v) ? v : null;
+      if (/^\d{1,2}$/.test(v)) return dates.find(d => +d.slice(8) === +v) || null;
+      if (v.length >= 3) {
+        const match = dates.filter(d => niceDate(d, { weekday: "long" }).toLowerCase().startsWith(v.slice(0, 3)));
+        // If a weekday appears twice (a long season), prefer the next one, else the latest past one.
+        return match.find(d => d >= todayIso) || match[match.length - 1] || null;
+      }
+      return null;
+    }
+
     function defaultDate() {
       const dates = [...new Set(state.events.filter(e => !isGone(e)).map(e => e.date))].sort();
-      if (params.get("date")) return params.get("date");
+      const asked = nightFromParam(params.get("night") || params.get("date"), dates);
+      if (asked) return asked;
       if (dates.includes(todayIso)) return todayIso;
       const next = dates.find(d => d > todayIso);
       // Before the season starts show everything; once a night is close, focus on it.

@@ -1,0 +1,13 @@
+<!-- Paste into a Ghost HTML card. Passes ?night=thu (or fri, sat, sun, tonight, all, 2026-11-05)
+     from the story's URL to the map, so a social post can open on one night. -->
+<iframe id="fw-map" src="https://the-quarry.github.io/fireworks/" title="Map of registered firework displays in Guernsey"
+        width="100%" height="720" allow="geolocation" loading="lazy" style="border:0;display:block"></iframe>
+<script>
+  (function () {
+    var night = new URLSearchParams(location.search).get("night");
+    if (night && /^[a-z0-9-]{1,10}$/i.test(night)) {
+      var f = document.getElementById("fw-map");
+      f.src = "https://the-quarry.github.io/fireworks/?night=" + encodeURIComponent(night);
+    }
+  })();
+</script>

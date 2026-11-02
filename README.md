@@ -17,8 +17,8 @@ Locations come from `scripts/geocache.json`, checked in this order: exact addres
 
 ## Embed
 
-    <iframe src="https://the-quarry.github.io/fireworks/" width="100%" height="720" allow="geolocation" style="border:0"></iframe>
+Paste the contents of `embed.html` into a Ghost HTML card. It passes `?night=` from the story's URL to the map, so a social post linking to `.../story-slug/?night=fri` opens the map on Friday. Accepted values: `thu`, `friday`, `tonight`, `all`, a day of the month (`7`) or a date (`2026-11-07`). Anything unrecognised falls back to the normal default.
 
-`allow="geolocation"` lets "Displays near me" use the reader's location. Without it, readers tap the map instead. Testing parameters: `?today=2026-11-05` fakes the date, `?date=2026-11-06` opens on a given night.
+`allow="geolocation"` lets "Displays near me" use the reader's location. Without it, readers tap the map instead. For testing, `?today=2026-11-05` on the map's own URL fakes the date.
 
 `archive/2025.json` holds last year's final list for the year-on-year comparison.
