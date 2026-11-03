@@ -1,8 +1,8 @@
 {
   "source": "https://www.gov.gg/fireworks",
   "year": 2026,
-  "checked": "2026-11-03T15:19:15+00:00",
-  "changed": "2026-11-03T15:19:15+00:00",
+  "checked": "2026-11-03T22:21:41+00:00",
+  "changed": "2026-11-03T22:21:41+00:00",
   "events": [
     {
       "name": "Duveaux Road",
@@ -269,6 +269,25 @@
       "geo_precision": "address",
       "id": "2026-11-05|route de cobo castel gy5 7rx",
       "first_seen": "2026-11-03T15:19:15+00:00",
+      "status": "listed"
+    },
+    {
+      "name": "Rue Du Presbytere (Rectory Hill)",
+      "full_address": "Rue Du Presbytere (Rectory Hill), Castel, GY5 7NE",
+      "parish": "Castel",
+      "postcode": "GY5 7NE",
+      "date": "2026-11-05",
+      "time": "18:30-20:30",
+      "start": "18:30",
+      "end": "20:30",
+      "fireworks_at": "",
+      "type": "Private",
+      "notes": "",
+      "lat": 49.462246,
+      "lon": -2.573019,
+      "geo_precision": "postcode",
+      "id": "2026-11-05|rue du presbytere rectory hill castel gy5 7ne",
+      "first_seen": "2026-11-03T22:21:41+00:00",
       "status": "listed"
     },
     {
