@@ -5,6 +5,12 @@
     "precision": "address",
     "query": "2025 map: same venue"
   },
+  "admiral park st peter port gy1 2aw": {
+    "lat": 49.466921,
+    "lon": -2.538149,
+    "precision": "address",
+    "query": "Admiral Park, St Peter Port, Guernsey"
+  },
   "braye road vale gy3 5pe": {
     "lat": 49.486785,
     "lon": -2.523378,
@@ -35,11 +41,23 @@
     "precision": "street",
     "query": "Photon: La Rue de la Brigade"
   },
+  "la houguette primary school route des paysans st peter gy7 9la": {
+    "lat": 49.449407,
+    "lon": -2.638119,
+    "precision": "address",
+    "query": "La Houguette Primary School, Route Des Paysans, St. Peter, Guernsey"
+  },
   "la houguette primary school route des paysans st pierre du bois gy7 9la": {
     "lat": 49.449911,
     "lon": -2.637349,
     "precision": "address",
     "query": "Photon: La Houguette Primary School"
+  },
+  "la maison au compte vale gy3 5he": {
+    "lat": 49.492127,
+    "lon": -2.530305,
+    "precision": "address",
+    "query": "La Maison Au Compte, Vale, Guernsey"
   },
   "la robergerie st sampson gy2 4ng": {
     "lat": 49.480514,
@@ -53,11 +71,23 @@
     "precision": "street",
     "query": "Photon: La Rochelle Road"
   },
+  "le petit axce vale gy3 5ds": {
+    "lat": 49.498513,
+    "lon": -2.516783,
+    "precision": "address",
+    "query": "Le Petit Axce, Vale, Guernsey"
+  },
   "les genats estate castel gy5 7yj": {
     "lat": 49.466633,
     "lon": -2.587432,
     "precision": "parish",
     "query": "Castel, Guernsey"
+  },
+  "les naftiaux estate st andrew gy6 8xg": {
+    "lat": 49.449901,
+    "lon": -2.568823,
+    "precision": "parish",
+    "query": "St Andrew, Guernsey"
   },
   "les ruettes st andrew gy6 8uq": {
     "lat": 49.454174,
@@ -407,11 +437,23 @@
     "precision": "street",
     "query": "Photon: Rocquettes Road"
   },
+  "route de cobo castel gy5 7rx": {
+    "lat": 49.47687,
+    "lon": -2.589732,
+    "precision": "address",
+    "query": "Route De Cobo, Castel, Guernsey"
+  },
   "rue de la hougue maban st saviour gy7 9jl": {
     "lat": 49.449696,
     "lon": -2.626429,
     "precision": "street",
     "query": "Photon: Rue de la Hougue Maban"
+  },
+  "rue des marais vale gy6 8au": {
+    "lat": 49.479743,
+    "lon": -2.570416,
+    "precision": "postcode",
+    "query": "GY6 8AU"
   },
   "verte rue belval road vale gy3 5lp": {
     "lat": 49.489899,
