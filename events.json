@@ -1,8 +1,8 @@
 {
   "source": "https://www.gov.gg/fireworks",
   "year": 2026,
-  "checked": "2026-11-04T15:33:19+00:00",
-  "changed": "2026-11-04T15:33:19+00:00",
+  "checked": "2026-11-04T22:40:26+00:00",
+  "changed": "2026-11-04T22:40:26+00:00",
   "events": [
     {
       "name": "Duveaux Road",
@@ -79,6 +79,25 @@
       "geo_precision": "postcode",
       "id": "2026-11-05|la villette hotel rue de la villette st martin gy4 6qg",
       "first_seen": "2026-11-03T15:19:15+00:00",
+      "status": "listed"
+    },
+    {
+      "name": "Rue Des Eturs",
+      "full_address": "Rue Des Eturs, Castel, GY5 7DT",
+      "parish": "Castel",
+      "postcode": "GY5 7DT",
+      "date": "2026-11-05",
+      "time": "17:30-18:30",
+      "start": "17:30",
+      "end": "18:30",
+      "fireworks_at": "",
+      "type": "Private",
+      "notes": "",
+      "lat": 49.460429,
+      "lon": -2.591232,
+      "geo_precision": "postcode",
+      "id": "2026-11-05|rue des eturs castel gy5 7dt",
+      "first_seen": "2026-11-04T22:40:26+00:00",
       "status": "listed"
     },
     {
@@ -307,6 +326,25 @@
       "geo_precision": "street",
       "id": "2026-11-05|green lanes st peter port gy1 1tn",
       "first_seen": "2026-11-02T15:04:56+00:00",
+      "status": "listed"
+    },
+    {
+      "name": "Houmet Lane",
+      "full_address": "Houmet Lane, Vale, GY6 8JQ",
+      "parish": "Vale",
+      "postcode": "GY6 8JQ",
+      "date": "2026-11-05",
+      "time": "18:30",
+      "start": "18:30",
+      "end": "",
+      "fireworks_at": "",
+      "type": "Private",
+      "notes": "",
+      "lat": 49.49333,
+      "lon": -2.55488,
+      "geo_precision": "address",
+      "id": "2026-11-05|houmet lane vale gy6 8jq",
+      "first_seen": "2026-11-04T22:40:26+00:00",
       "status": "listed"
     },
     {

@@ -35,6 +35,12 @@
     "precision": "street",
     "query": "Photon: Green Lanes"
   },
+  "houmet lane vale gy6 8jq": {
+    "lat": 49.49333,
+    "lon": -2.55488,
+    "precision": "address",
+    "query": "Houmet Lane, Vale, Guernsey"
+  },
   "l atelier les maresquets rue des barrass vale gy3 5rf": {
     "lat": 49.495456,
     "lon": -2.522509,
