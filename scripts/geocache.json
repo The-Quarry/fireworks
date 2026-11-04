@@ -35,6 +35,12 @@
     "precision": "street",
     "query": "Photon: Green Lanes"
   },
+  "l atelier les maresquets rue des barrass vale gy3 5rf": {
+    "lat": 49.495456,
+    "lon": -2.522509,
+    "precision": "parish",
+    "query": "Vale, Guernsey"
+  },
   "la brigade st andrew gy4": {
     "lat": 49.446609,
     "lon": -2.562259,
@@ -449,11 +455,29 @@
     "precision": "street",
     "query": "Photon: Rue de la Hougue Maban"
   },
+  "rue des cottes st sampson gy2 4tz": {
+    "lat": 49.489704,
+    "lon": -2.565005,
+    "precision": "address",
+    "query": "Rue Des Cottes, St. Sampson, Guernsey"
+  },
   "rue des marais vale gy6 8au": {
     "lat": 49.479743,
     "lon": -2.570416,
     "precision": "postcode",
     "query": "GY6 8AU"
+  },
+  "rue des simons torteval gy8 0lr": {
+    "lat": 49.428846,
+    "lon": -2.639806,
+    "precision": "address",
+    "query": "Rue Des Simons, Torteval, Guernsey"
+  },
+  "the dunes vazon road castel gy5 7lq": {
+    "lat": 49.470222,
+    "lon": -2.606056,
+    "precision": "street",
+    "query": "Vazon Road, Castel, Guernsey"
   },
   "verte rue belval road vale gy3 5lp": {
     "lat": 49.489899,
