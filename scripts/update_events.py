@@ -241,32 +241,49 @@ def geocode(e, cache, enabled):
     return None
 
 
+def place_key(e):
+    """Identity of a display that survives gov.gg rewording the address
+    (e.g. 'St Martins' becoming 'St. Martin'): first line of the address plus postcode."""
+    return f"{norm_key(e.get('name'))}|{(e.get('postcode') or '').replace(' ', '').upper()}"
+
+
 def merge(prev, scraped, today):
     prev_by_id = {e["id"]: e for e in prev if "id" in e}
+    prev_by_place = {}
+    for e in prev:
+        prev_by_place.setdefault((e["date"], place_key(e)), []).append(e)
     now = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
-    out, seen = [], set()
+    out, consumed = [], set()
     for e in scraped:
         e["id"] = event_id(e)
+        # exact match first, else the same display with reworded address on the same date
         old = prev_by_id.get(e["id"])
+        if old is None:
+            same = [o for o in prev_by_place.get((e["date"], place_key(e)), []) if o["id"] not in consumed]
+            old = same[0] if same else None
+        if old is not None:
+            consumed.add(old["id"])
+            # any other stale copies of the same display on the same date are superseded too
+            consumed.update(o["id"] for o in prev_by_place.get((e["date"], place_key(e)), []))
         e["first_seen"] = (old or {}).get("first_seen", now)
         e["status"] = "listed"
         if old and old.get("rescheduled_from"):
             e["rescheduled_from"] = old["rescheduled_from"]
-        seen.add(e["id"])
         out.append(e)
+    new_ids = {e["id"] for e in out}
 
-    scraped_by_addr = {}
+    scraped_by_place = {}
     for e in out:
-        scraped_by_addr.setdefault(norm_key(e["full_address"]), []).append(e)
+        scraped_by_place.setdefault(place_key(e), []).append(e)
 
     for old in prev:
-        if old.get("id") in seen:
+        if old.get("id") in consumed or old.get("id") in new_ids:
             continue
         if old["date"] < today.isoformat():
             out.append(old)  # past event: gov.gg drops these, keep our record
             continue
-        # same address newly listed on another date: treat as rescheduled
-        moved = [e for e in scraped_by_addr.get(norm_key(old["full_address"]), [])
+        # same display newly listed on another date: treat as rescheduled
+        moved = [e for e in scraped_by_place.get(place_key(old), [])
                  if e["date"] != old["date"] and e["id"] not in prev_by_id]
         if moved:
             for e in moved:
