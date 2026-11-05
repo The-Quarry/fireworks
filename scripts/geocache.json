@@ -35,6 +35,12 @@
     "precision": "street",
     "query": "Photon: Braye Road"
   },
+  "chemin robin rectory hill castel gy5 7ng": {
+    "lat": 49.462246,
+    "lon": -2.573019,
+    "precision": "street",
+    "query": "Rectory Hill, Castel, Guernsey"
+  },
   "clos l ecole brock road st peter port gy1 1rj": {
     "lat": 49.458734,
     "lon": -2.546824,
@@ -148,6 +154,12 @@
     "lon": -2.607124,
     "precision": "address",
     "query": "Les Grands Moulins, Castel, Guernsey"
+  },
+  "les mauxmarquis st andrew gy6 8tu": {
+    "lat": 49.447975,
+    "lon": -2.565735,
+    "precision": "address",
+    "query": "Les Mauxmarquis, St. Andrew, Guernsey"
   },
   "les naftiaux estate st andrew gy6 8xg": {
     "lat": 49.449901,
@@ -533,6 +545,12 @@
     "precision": "street",
     "query": "Photon: Rue de la Hougue Maban"
   },
+  "rue de la perruque castel gy5 7pa": {
+    "lat": 49.463564,
+    "lon": -2.579921,
+    "precision": "address",
+    "query": "Rue De La Perruque, Castel, Guernsey"
+  },
   "rue de rougeval torteval gy8 0pe": {
     "lat": 49.432104,
     "lon": -2.654127,
@@ -556,6 +574,12 @@
     "lon": -2.639806,
     "precision": "address",
     "query": "Rue Des Simons, Torteval, Guernsey"
+  },
+  "rue des vinaires st pierre du bois gy7 9ha": {
+    "lat": 49.440863,
+    "lon": -2.634549,
+    "precision": "address",
+    "query": "Rue Des Vinaires, St. Pierre Du Bois, Guernsey"
   },
   "rue du preel castel gy5 7dn": {
     "lat": 49.459816,
