@@ -23,6 +23,12 @@
     "precision": "address",
     "query": "Belval Road, Vale, Guernsey"
   },
+  "braye du valle st sampson gy2 4rd": {
+    "lat": 49.486391,
+    "lon": -2.539532,
+    "precision": "address",
+    "query": "Braye Du Valle, St. Sampson, Guernsey"
+  },
   "braye road vale gy3 5pe": {
     "lat": 49.486785,
     "lon": -2.523378,
@@ -113,6 +119,12 @@
     "precision": "street",
     "query": "Photon: La Rochelle Road"
   },
+  "la rue de la corbinerie st martin gy4 6sr": {
+    "lat": 49.44522,
+    "lon": -2.558388,
+    "precision": "address",
+    "query": "La Rue De La Corbinerie, St. Martin, Guernsey"
+  },
   "le petit axce vale gy3 5ds": {
     "lat": 49.498513,
     "lon": -2.516783,
@@ -130,6 +142,12 @@
     "lon": -2.587432,
     "precision": "parish",
     "query": "Castel, Guernsey"
+  },
+  "les grands moulins castel gy5 7jz": {
+    "lat": 49.458321,
+    "lon": -2.607124,
+    "precision": "address",
+    "query": "Les Grands Moulins, Castel, Guernsey"
   },
   "les naftiaux estate st andrew gy6 8xg": {
     "lat": 49.449901,
@@ -160,6 +178,12 @@
     "lon": -2.560292,
     "precision": "street",
     "query": "Photon: La Longue Rue"
+  },
+  "mount row st peter port gy1 1ns": {
+    "lat": 49.450472,
+    "lon": -2.551536,
+    "precision": "address",
+    "query": "Mount Row, St. Peter Port, Guernsey"
   },
   "pc:GY1 1FR": {
     "lat": 49.462312,
@@ -508,6 +532,12 @@
     "lon": -2.626429,
     "precision": "street",
     "query": "Photon: Rue de la Hougue Maban"
+  },
+  "rue de rougeval torteval gy8 0pe": {
+    "lat": 49.432104,
+    "lon": -2.654127,
+    "precision": "address",
+    "query": "Rue De Rougeval, Torteval, Guernsey"
   },
   "rue des cottes st sampson gy2 4tz": {
     "lat": 49.489704,
