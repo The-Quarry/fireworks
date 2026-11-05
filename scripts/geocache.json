@@ -11,6 +11,18 @@
     "precision": "address",
     "query": "Admiral Park, St Peter Port, Guernsey"
   },
+  "avenue germain ville au roi st peter port gy1 1pf": {
+    "lat": 49.447838,
+    "lon": -2.553557,
+    "precision": "street",
+    "query": "Ville au Roi, St. Peter Port, Guernsey"
+  },
+  "belval road vale gy3 5ls": {
+    "lat": 49.489899,
+    "lon": -2.517046,
+    "precision": "address",
+    "query": "Belval Road, Vale, Guernsey"
+  },
   "braye road vale gy3 5pe": {
     "lat": 49.486785,
     "lon": -2.523378,
@@ -35,6 +47,12 @@
     "precision": "street",
     "query": "Photon: Green Lanes"
   },
+  "hougues magues lane st sampson gy2 4ur": {
+    "lat": 49.482667,
+    "lon": -2.549214,
+    "precision": "address",
+    "query": "Hougues Magues Lane, St. Sampson, Guernsey"
+  },
   "houmet lane vale gy6 8jq": {
     "lat": 49.49333,
     "lon": -2.55488,
@@ -52,6 +70,12 @@
     "lon": -2.562259,
     "precision": "street",
     "query": "Photon: La Rue de la Brigade"
+  },
+  "la giffardiere albecq castel gy5 7hn": {
+    "lat": 49.473537,
+    "lon": -2.601114,
+    "precision": "address",
+    "query": "La Giffardiere, Albecq, Castel, Guernsey"
   },
   "la houguette primary school route des paysans st peter gy7 9la": {
     "lat": 49.449407,
@@ -71,6 +95,12 @@
     "precision": "address",
     "query": "La Maison Au Compte, Vale, Guernsey"
   },
+  "la mazotte vale gy3 5jl": {
+    "lat": 49.494564,
+    "lon": -2.519409,
+    "precision": "address",
+    "query": "La Mazotte, Vale, Guernsey"
+  },
   "la robergerie st sampson gy2 4ng": {
     "lat": 49.480514,
     "lon": -2.53164,
@@ -89,6 +119,12 @@
     "precision": "address",
     "query": "Le Petit Axce, Vale, Guernsey"
   },
+  "les basses capelles road st sampson gy2 4we": {
+    "lat": 49.482794,
+    "lon": -2.55121,
+    "precision": "address",
+    "query": "Les Basses Capelles Road, St. Sampson, Guernsey"
+  },
   "les genats estate castel gy5 7yj": {
     "lat": 49.466633,
     "lon": -2.587432,
@@ -106,6 +142,12 @@
     "lon": -2.564143,
     "precision": "address",
     "query": "Les Ruettes, St. Andrew, Guernsey"
+  },
+  "les vauxlaurens st peter port gy1 1us": {
+    "lat": 49.459493,
+    "lon": -2.541015,
+    "precision": "address",
+    "query": "Les Vauxlaurens, St. Peter Port, Guernsey"
   },
   "longue rue st sampson gy2 4ab": {
     "lat": 49.481727,
@@ -443,6 +485,12 @@
     "precision": "address",
     "query": "Portinfer Road, Vale, Guernsey"
   },
+  "retot castel gy5 7eg": {
+    "lat": 49.466633,
+    "lon": -2.587432,
+    "precision": "parish",
+    "query": "Castel, Guernsey"
+  },
   "rocquettes road st peter port gy1 1xr": {
     "lat": 49.458574,
     "lon": -2.551909,
@@ -478,6 +526,24 @@
     "lon": -2.639806,
     "precision": "address",
     "query": "Rue Des Simons, Torteval, Guernsey"
+  },
+  "rue du preel castel gy5 7dn": {
+    "lat": 49.459816,
+    "lon": -2.587056,
+    "precision": "address",
+    "query": "Rue Du Preel, Castel, Guernsey"
+  },
+  "rue du tertre vale gy3 5qf": {
+    "lat": 49.487829,
+    "lon": -2.522525,
+    "precision": "address",
+    "query": "Rue Du Tertre, Vale, Guernsey"
+  },
+  "sohier road vale gy3 5py": {
+    "lat": 49.489095,
+    "lon": -2.527342,
+    "precision": "address",
+    "query": "Sohier Road, Vale, Guernsey"
   },
   "the dunes vazon road castel gy5 7lq": {
     "lat": 49.470222,
