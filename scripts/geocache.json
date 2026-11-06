@@ -23,6 +23,12 @@
     "precision": "address",
     "query": "Belval Road, Vale, Guernsey"
   },
+  "braye du valle st sampson gy2 4rb": {
+    "lat": 49.486391,
+    "lon": -2.539532,
+    "precision": "address",
+    "query": "Braye Du Valle, St. Sampson, Guernsey"
+  },
   "braye du valle st sampson gy2 4rd": {
     "lat": 49.486391,
     "lon": -2.539532,
@@ -136,6 +142,12 @@
     "lon": -2.516783,
     "precision": "address",
     "query": "Le Petit Axce, Vale, Guernsey"
+  },
+  "les barras lane vale gy6 8el": {
+    "lat": 49.4851,
+    "lon": -2.569529,
+    "precision": "address",
+    "query": "Les Barras Lane, Vale, Guernsey"
   },
   "les basses capelles road st sampson gy2 4we": {
     "lat": 49.482794,
@@ -562,6 +574,12 @@
     "lon": -2.565005,
     "precision": "address",
     "query": "Rue Des Cottes, St. Sampson, Guernsey"
+  },
+  "rue des huriaux st andrew gy6 8rf": {
+    "lat": 49.460916,
+    "lon": -2.626701,
+    "precision": "address",
+    "query": "Rue Des Huriaux, St. Andrew, Guernsey"
   },
   "rue des marais vale gy6 8au": {
     "lat": 49.479743,
